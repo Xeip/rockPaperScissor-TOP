@@ -1,32 +1,35 @@
+// Declare
 const hand = ["rock", "paper", "scissor"];
 let computerScore = 0;
 let humanScore = 0;
 let state, win, lose, computerNumber, humanNumber;
-let round = 1;
 const condition = [0, 1, 2];
+const redo = document.querySelector("#redo");
+const btn = document.querySelectorAll("#select");
+const div = document.querySelector("div");
 
+// below to break line in textContent
+div.setAttribute('style', 'white-space: pre;');
+
+// event listeners
+
+btn.forEach((btn) => btn.addEventListener("click", () => {
+    humanNumber = Number(btn.className);
+    computerNumber = getComputerChoice();
+    playRound();
+    if (computerScore == 5 || humanScore == 5){
+        whoWins();
+    }
+}));
+
+redo.addEventListener("click", reset);
+
+// functions
 function getComputerChoice(){
     return Math.floor(Math.random() * 3);
-//     console.log(hand[computerNumber]);
-//     console.log(typeof(computerNumber));
     }
 
-function getHumanChoice() {
-    number = prompt("Please input your choice: \n0: rock \n1: paper \n2: scissor");
-    number = Number(number);
-    console.log("number:" + number);
-    console.log("tipe:" + typeof(number));
-    cek = number + 1;
-    console.log("cek: " + cek);
-    if (!condition.includes(number)){
-        alert ("Please return either 0, 1, or 2");
-        playGame();
-    }
-    return Number(number);
-    
-}
-
-function playRound(computerNumber, humanNumber) {
+function playRound() {
     list = String(computerNumber)+ ',' + String(humanNumber);
     if (list == "1,0" || list == "2,1" || list == "0,2"){
         state = "You Lose!";
@@ -35,8 +38,8 @@ function playRound(computerNumber, humanNumber) {
         computerScore += 1;
         console.log("state: " + state);
     } else if(list == "0,0" || list == "1,1" || list == "2,2"){
-        alert("It's a draw!\nBoth are " + hand[computerNumber] + "\nLet's do it again");
-        playGame();
+        div.textContent = "It's a draw! Both are " + hand[computerNumber] + "\nLet's do it again\nYour score:" +humanScore + "\nComputer score:"+computerScore;
+        return;
     } else {
         state = "You Win!";
         win = humanNumber;
@@ -44,22 +47,22 @@ function playRound(computerNumber, humanNumber) {
         humanScore += 1;
         console.log("state: " + state);
     }
-
-    alert(state +" "+ hand[win] + " beats " + hand[lose]);
+    div.textContent = state +" "+ hand[win] + " beats " + hand[lose] + "\nYour score:" +humanScore + "\nComputer score:"+computerScore;
 }
 
-function playGame() {
-    if (round == 1){
-        alert("Welcome to rock, paper, scissor game!\nWe'll play in 5 rounds\nThis is your round "+ round)
+function whoWins(){
+    alert(state +" "+ hand[win] + " beats " + hand[lose] + "\nYour score:" +humanScore + "\nComputer score:"+computerScore);
+    if (humanScore == 5){
+        alert("Congratulations! You win");
+        reset();
+    } else if (computerScore == 5){
+        alert("HAHAHAH You lose..");
+        reset();
     }
-    computerNumber = getComputerChoice();
-    console.log("computerNumber: " + computerNumber);
-    humanNumber = getHumanChoice();
-    console.log("humanNumber: " + humanNumber);
-    playRound(computerNumber, humanNumber);
-    round += 1;
-    alert("Your score:" + humanScore + "\nComputer score:" + computerScore)
-    if (round <= 5){
-        playGame();
-    }
+}
+
+function reset() {
+    computerScore = 0;
+    humanScore = 0;
+    div.textContent = "Your score:" +humanScore + "\nComputer score:"+computerScore;
 }
